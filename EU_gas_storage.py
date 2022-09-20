@@ -4,10 +4,18 @@ This script generates a plot showing the current state of gas storage facilities
 @author: cristobal-GC
 """
 
+# Comment: only Spain and Latvia can withdraw during winter days (1/Nov to 31/March) less than their total storage capacity due to limiting withdrawal capacity
+
+# Comment: minimum EU storage level 18% in April 2018
+
 
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+day		= '17'
+month	= '09'
+year	= '2022'
 
 
 tamano = 18
@@ -30,13 +38,17 @@ my_gray = (.77,.77,.77)
 ##### Winter consumption (from 1/Nov to 31/March) is assumed to be 55% of year consumption
 # Ref: EUROSTAT
 # https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table?lang=en
-winter_factor = 0.55
+winter_cons_factor = 0.55
 winter_days = 151
+
+# Minimum storage level in EU wrt total capacity (April/2018): 18%
+min_storage_level = 0.18
+
 
 ##### Data processing
 
 # Read data
-data = pd.read_csv('data/AGSI_CountryAggregatedDataset_gasDayStart_2022-09-17.csv',delimiter=';')
+data = pd.read_csv(f'data/AGSI_CountryAggregatedDataset_gasDayStart_{year}-{month}-{day}.csv',delimiter=';')
 
 # Remove countries with No Data
 df0 = data.loc[data["Status"]!="N"]
@@ -130,10 +142,11 @@ porc_EU = dfEU.loc[0,['Full (%)']].item()
 ax.text(5, 240, f'EU storage level: {porc_EU}%', fontsize=tamano)
 
 # Consumption in 1 winter day
-cons_1winter_day = dfEU.loc[0,['Consumption (TWh)']].item()*winter_factor/winter_days
-# Winter days covered given current storage
+EU_year_cons = max(dfEU.loc[0,['Consumption (TWh)']].item(),4151.8)
+cons_1winter_day = EU_year_cons*winter_cons_factor/winter_days
+# Winter days covered given current storage and considering minimum storage level
 stored_EU = dfEU.loc[0,['Gas in storage (TWh)']].item()
-winter_days_covered = round(stored_EU/cons_1winter_day)
+winter_days_covered = round((stored_EU*(1-min_storage_level))/cons_1winter_day)
 ax.text(5, 220, f'Represents consumption for: {winter_days_covered} winter days', fontsize=tamano_small)
 
 ax.xaxis.set_label_text("")
@@ -145,5 +158,6 @@ ax.grid(which='major', color='#DDDDDD',linestyle='--', linewidth=0.8)
 
 ax.set_axisbelow(True)
 
-plt.show()
+
+plt.savefig(f'figures/EU_storage_{year}_{month}_{day}.jpg', dpi=300, bbox_inches='tight') 
 
