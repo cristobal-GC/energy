@@ -159,5 +159,5 @@ ax.grid(which='major', color='#DDDDDD',linestyle='--', linewidth=0.8)
 ax.set_axisbelow(True)
 
 
-plt.savefig(f'figures/EU_storage_{year}_{month}_{day}.jpg', dpi=300, bbox_inches='tight') 
+plt.savefig(f'figures/EU_gas_storage_{year}_{month}_{day}.jpg', dpi=300, bbox_inches='tight') 
 
