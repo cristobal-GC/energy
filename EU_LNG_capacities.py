@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-This script generates a plot showing LNG send-out capacities in EU countries
+This script generates a plot showing LNG export capacities in EU countries
 
-@author: cristobal-GC
+https://github.com/cristobal-GC/energy
 """
+
 
 
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
 
 
 
@@ -78,7 +77,6 @@ bottom_margin 	= 7 # cm
 
 
 
-
 #################### Data processing to obtain dataframes 'df' and 'dfEU'
 
 ### Read data
@@ -138,7 +136,7 @@ if token_add_message_1:
 	EU_LNG_capacity = dfEU.loc[0,['DTRS (GWh/d)']].item()
 
 	# Add message
-	ax.text(2.25, 1550, f'EU total regasification capacity: {round(EU_LNG_capacity/10)/100} TWh/d', 
+	ax.text(2.25, 1550, f'Total EU regasification capacity: {round(EU_LNG_capacity/10)/100} TWh/d', 
 			fontsize=tamano, color=color_message)
 
 
@@ -170,21 +168,24 @@ if token_add_message_2:
 	winter_days_covered_reduced = round(winter_days*(EU_LNG_capacity_reduced*winter_days/(EU_winter_cons_reduced*1000)))
 
 	# Add message
-	ax.text(2.5,1350,f'Allows for covering: {winter_days_covered} winter days ({winter_days_covered_reduced} winter days)' u"$^\u2020$",
+	ax.text(2.5,1350,f'Gas consumption coverage: {winter_days_covered} winter days ({winter_days_covered_reduced} winter days)' u"$^\u2020$",
 			fontsize=tamano_small, color=color_message)
 
 
 
 ### Notes
+new_line = 120
+
 ax.text(-1.5,-850,f'Winter days: From 1/Nov to 31/March (151 days).',
 			fontsize=tamano_notes, color=color_notes)
 
-ax.text(-1.5,-950,u'$^\u2020$' f'If pipeline capacity between Spain-France is considered ({export_capacity_ES_FR} GWh/d).',
+ax.text(-1.5,-850-new_line,u'$^\u2020$' f' If pipeline capacity between Spain-France is considered ({export_capacity_ES_FR} GWh/d).',
 			fontsize=tamano_notes, color=color_notes)
 
-ax.text(-1.5,-1050,'Data source, details and code: https://alsi.gie.eu/',
+ax.text(-1.5,-850-2*new_line,'Data, details and code:',
 			fontsize=tamano_notes, color=color_notes)
-
+ax.text(0.7,-850-2*new_line,'https://github.com/cristobal-GC/energy/blob/main/EU_LNG_capacities.py',
+			fontsize=tamano_notes, color=color_message)
 
 
 ### Customise plot
