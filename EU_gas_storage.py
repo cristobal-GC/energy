@@ -189,8 +189,12 @@ if token_add_message:
 			fontsize=tamano, color=color_bar)
 	plt.arrow(11.4, 185, .75, 0,head_width=5, head_length=0.1, fc=color_bar, ec=color_bar)
 
+	# Winter days covered with 100% capacity
+	total_capacity_EU = dfEU.loc[0,['Working (gas) volume (TWh)']].item()
+	winter_days_covered_100 = round((total_capacity_EU*(1-min_storage_level))/cons_1winter_day)
+
 	# Add message line 2
-	ax.text(10.1, 155, f'100%         {round(winter_days_covered*100/porc_EU)} winter days', 
+	ax.text(10.1, 155, f'100%         {winter_days_covered_100} winter days', 
 			fontsize=tamano, color=color_notes)
 	plt.arrow(11.4, 160, .75, 0,head_width=5, head_length=0.1, fc=color_notes, ec=color_notes)
 
@@ -199,12 +203,15 @@ if token_add_message:
 ### Notes
 new_line = 15
 
-ax.text(-2.,-125,f'Winter days: From 1/Nov to 31/March (151 days).',
+ax.text(-2.,-110,f'Winter days: From 1/Nov to 31/March (151 days).',
 			fontsize=tamano_notes, color=color_notes)
 
-ax.text(-2.,-125-1*new_line,'Data, details and code:',
+ax.text(-2.,-110-1*new_line,f'A minimum storage level of {round(100*min_storage_level)}% is assumed.',
 			fontsize=tamano_notes, color=color_notes)
-ax.text(1.7,-125-1*new_line,'https://github.com/cristobal-GC/energy/blob/main/EU_gas_storage.py',
+
+ax.text(-2.,-110-2*new_line,'Data, details and code:',
+			fontsize=tamano_notes, color=color_notes)
+ax.text(1.7,-110-2*new_line,'https://github.com/cristobal-GC/energy/blob/main/EU_gas_storage.py',
 			fontsize=tamano_notes, color=color_message)
 
 

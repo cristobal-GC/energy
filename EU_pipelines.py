@@ -174,7 +174,7 @@ ax.text(0.05,-1550-2*new_line,'https://github.com/cristobal-GC/energy/blob/main/
 ### Customise plot
 
 # Add title
-plt.title('Import gas pipelines in EU',fontsize = tamano,fontweight="bold")
+plt.title('Gas import pipelines in EU',fontsize = tamano,fontweight="bold")
 
 # Set axes labels
 ax.set_xlabel("")
