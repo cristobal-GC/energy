@@ -50,8 +50,7 @@ EU_year_cons = 4151.8 # TWh
 #################### Plot parameters
 
 ### tokens
-token_add_message_1 = True
-token_add_message_2 = True
+token_add_message = True
 
 
 
@@ -62,14 +61,15 @@ tamano_notes	= 13
 
 params = {'axes.labelsize': tamano,
           'xtick.labelsize': tamano,
-          'ytick.labelsize': tamano}     
+          'ytick.labelsize': tamano,
+		  'legend.fontsize': tamano_notes}     
 
 plt.rcParams.update(params)
 
 
 
 ### Colours
-color_bar 		= (0.8,0.4,0.4) # dark red
+color_bar 		= (0.65,0.3,0.3) # dark red
 color_message 	= (0.0,0.3,0.6) # azure 40%
 color_grid		= (0.8,0.8,0.8) # light gray
 color_notes		= (0.4,0.4,0.4) # gray
@@ -162,38 +162,37 @@ ax = fig.add_axes((left, bottom, width, height))
 df.plot(x='Name', y='Working (gas) volume (TWh)',
         color=color_grid,
         kind='bar',width=.9,
-        legend=None,
+        label='Capacity',
         ax=ax)
             
 
 df.plot(x='Name', y='Gas in storage (TWh)',
         color=color_bar,
         kind="bar",width=.9,
-        ax=ax,legend=None)
+        ax=ax,label=f'{day}/{month}/{year}')
 
 
 
-### Message 1
-if token_add_message_1:
+### Message 
+if token_add_message:
 	
 	# Get storage perc in EU 
 	porc_EU = dfEU.loc[0,['Full (%)']].item()
-	# Add message
-	ax.text(4.4, 205, f'EU storage level: {porc_EU}%', fontsize=tamano, color=color_message)
-
-
-
-### Message 2
-if token_add_message_2:
-
 	# Consumption in 1 winter day
 	cons_1winter_day = EU_year_cons*winter_cons_factor/winter_days
-	# Winter days covered given current storage and considering minimum storage level
+	# Winter days covered given current storage level and considering a remaining minimum level defined in "min_storage_level"
 	stored_EU = dfEU.loc[0,['Gas in storage (TWh)']].item()
 	winter_days_covered = round((stored_EU*(1-min_storage_level))/cons_1winter_day)
-	# Add message
-	ax.text(5, 180, f'Gas consumption coverage: {winter_days_covered} winter days',
-			fontsize=tamano_small, color=color_message)
+
+	# Add message line 1
+	ax.text(6, 180, f'EU storage level: {porc_EU}%         {winter_days_covered} winter days', 
+			fontsize=tamano, color=color_bar)
+	plt.arrow(11.4, 185, .75, 0,head_width=5, head_length=0.1, fc=color_bar, ec=color_bar)
+
+	# Add message line 2
+	ax.text(10.1, 155, f'100%         {round(winter_days_covered*100/porc_EU)} winter days', 
+			fontsize=tamano, color=color_notes)
+	plt.arrow(11.4, 160, .75, 0,head_width=5, head_length=0.1, fc=color_notes, ec=color_notes)
 
 
 
@@ -213,7 +212,7 @@ ax.text(1.7,-125-1*new_line,'https://github.com/cristobal-GC/energy/blob/main/EU
 ### Customise plot
 
 # Add title
-plt.title(f'Gas storage capacity in EU countries on {day}/{month}/{year}',fontsize = tamano,fontweight="bold")
+plt.title('Gas storage in EU countries',fontsize = tamano,fontweight="bold")
 
 # Set axes labels
 ax.set_xlabel("")

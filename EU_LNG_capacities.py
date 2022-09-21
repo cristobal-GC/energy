@@ -38,8 +38,7 @@ winter_days = 151
 #################### Plot parameters
 
 ### tokens
-token_add_message_1 = True
-token_add_message_2 = True
+token_add_message = True
 
 
 
@@ -57,7 +56,7 @@ plt.rcParams.update(params)
 
 
 ### Colours
-color_bar 		= (0.3,0.5,0.0) # green
+color_bar 		= (0.25,0.45,0.0) # green
 color_message 	= (0.0,0.3,0.6) # azure 40%
 color_grid		= (0.8,0.8,0.8) # light gray
 color_notes		= (0.4,0.4,0.4) # gray
@@ -130,20 +129,8 @@ df.plot(x='Name', y="DTRS (GWh/d)",
 
 
 ### Message 1
-if token_add_message_1:
+if token_add_message:
 	
-	# Get total capacity in EU 
-	EU_LNG_capacity = dfEU.loc[0,['DTRS (GWh/d)']].item()
-
-	# Add message
-	ax.text(2.25, 1550, f'Total EU regasification capacity: {round(EU_LNG_capacity/10)/100} TWh/d', 
-			fontsize=tamano, color=color_message)
-
-
-
-### Message 2
-if token_add_message_2:
-
 	# Get total capacity in EU 
 	EU_LNG_capacity = dfEU.loc[0,['DTRS (GWh/d)']].item()
 
@@ -161,15 +148,22 @@ if token_add_message_2:
 	# EU gas consumption in winter period without ES and PT
 	EU_winter_cons_reduced = EU_year_cons_reduced*winter_cons_factor
 
-	# Winter days covered with NGL capacity
+	# Winter days covered with LNG capacity
 	winter_days_covered = round(winter_days*(EU_LNG_capacity*winter_days/(EU_winter_cons*1000)))
 
-	# Winter days covered with NGL capacity considering limited pipeline capacity between ES-FR
+
+
+	# Winter days covered with LNG capacity considering limited pipeline capacity between ES-FR
 	winter_days_covered_reduced = round(winter_days*(EU_LNG_capacity_reduced*winter_days/(EU_winter_cons_reduced*1000)))
 
+
 	# Add message
-	ax.text(2.5,1350,f'Gas consumption coverage: {winter_days_covered} winter days ({winter_days_covered_reduced} winter days)' u"$^\u2020$",
-			fontsize=tamano_small, color=color_message)
+	ax.text(2.1, 1550, f'Gas consumption coverage (unconstrained)$^\u2020$: {winter_days_covered} winter days', 
+			fontsize=tamano_small, color=color_notes)
+
+	# Add message
+	ax.text(2.1,1350,f'Gas consumption coverage (constrained)$^\u2020$    : {winter_days_covered_reduced} winter days',
+			fontsize=tamano_small, color=color_bar)
 
 
 
@@ -179,7 +173,7 @@ new_line = 120
 ax.text(-1.5,-850,f'Winter days: From 1/Nov to 31/March (151 days).',
 			fontsize=tamano_notes, color=color_notes)
 
-ax.text(-1.5,-850-new_line,u'$^\u2020$' f' If pipeline capacity between Spain-France is considered ({export_capacity_ES_FR} GWh/d).',
+ax.text(-1.5,-850-new_line,u'$^\u2020$' f' Constrained: Exports from Spain to France are limited by pipeline capacity  ({export_capacity_ES_FR} GWh/d).',
 			fontsize=tamano_notes, color=color_notes)
 
 ax.text(-1.5,-850-2*new_line,'Data, details and code:',
