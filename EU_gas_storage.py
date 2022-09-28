@@ -19,7 +19,8 @@ import matplotlib.pyplot as plt
 #################### Analysis parameters
 
 ### Date for file data/AGSI_CountryAggregatedDataset_gasDayStart_{year}-{month}-{day}
-day		= '17'
+# (download files from https://agsi.gie.eu/ and store in folder 'data/')
+day		= '26'
 month	= '09'
 year	= '2022'
 
