@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-This script generates a plot showing gas imports in EU by pipelines
-Data source: https://transparency.entsog.eu/#/map
+This script generates a plot showing gas imports in EU by pipelines from countries others than Russia
+
+Data source: 
+[1] https://transparency.entsog.eu/#/map
+[2] https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gas/default/table?lang=en
+[3] https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table?lang=en
+
 
 https://github.com/cristobal-GC/energy
 """
@@ -15,17 +20,21 @@ import textwrap
 
 
 
+
 #################### Analysis parameters
 
-### Winter consumption (from 1/Nov to 31/March) is assumed to be 55% of year consumption
-# Ref: EUROSTAT
-# https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table?lang=en
-winter_cons_factor = 0.55
+### Winter days from 1st/Nov to 31/Mar
 winter_days = 151
 
-### EU, SP and PT gas annual consumption 
-# Ref: https://agsi.gie.eu/
-EU_year_cons = 4151.8 # TWh
+### EU gas annual consumption (EU27 average between 2017 and 2021)
+# Ref: EUROSTAT [2]
+EU_year_cons = 4287.4 # TWh
+
+### Winter consumption (from 1/Nov to 31/March) is assumed to be 55% of year consumption
+# Ref: EUROSTAT [3]
+winter_cons_factor = 0.55
+
+
 
 
 
@@ -35,9 +44,8 @@ EU_year_cons = 4151.8 # TWh
 token_add_message = True
 
 
-
 ### font sizes
-tamano 			= 18
+tamano 		= 18
 tamano_small 	= 16
 tamano_notes	= 13
 
@@ -49,13 +57,11 @@ params = {'axes.labelsize': tamano,
 plt.rcParams.update(params)
 
 
-
 ### Colours
 color_bar 		= (0.5,0.0,1.0) # purple
-color_message 	= (0.0,0.3,0.6) # azure 40%
+color_message 		= (0.0,0.3,0.6) # azure 40%
 color_grid		= (0.8,0.8,0.8) # light gray
 color_notes		= (0.4,0.4,0.4) # gray
-
 
 
 ### Define figure and axes size
@@ -64,9 +70,8 @@ figure_height 	= 20 # cm
 
 left_margin 	= 3 # cm
 right_margin 	= .5 #cm
-top_margin 		= 1 # cm
+top_margin 	= 1 # cm
 bottom_margin 	= 7 # cm
-
 
 
 ### Max. width of xlabels
@@ -79,11 +84,12 @@ max_width = 12
 #################### Data processing to obtain dataframes 'df' and 'dfEU'
 
 ### Read data
-data = pd.read_csv('data/pipelines_EU.csv',delimiter=';',skiprows=1)
+# Source: [1]
+data = pd.read_csv('data/pipelines_EU.csv',delimiter=',',skiprows=1)
 
 # Columns description:
 #	'Capacity (GWh/d)'				: Firm capacity
-#	'Mean flow last winter (GWh/d)'	: During period 01/11/2021-31/03/2022
+#	'Mean flow winter 2021 (GWh/d)'	: During period 01/11/2021-31/03/2022
 
 
 # Sort by pipeline capacity
@@ -110,7 +116,6 @@ fig = plt.figure(figsize=(figure_width*cm2inch,figure_height*cm2inch))
 ax = fig.add_axes((left, bottom, width, height))
 
 
-
 ### Add bars
 df.plot(x='Name', y="Capacity (GWh/d)",
         color=color_grid,
@@ -118,13 +123,11 @@ df.plot(x='Name', y="Capacity (GWh/d)",
         label='Capacity',
         ax=ax)
 
-
-df.plot(x='Name', y="Mean flow last winter (GWh/d)",
+df.plot(x='Name', y="Mean flow winter 2021 (GWh/d)",
         color=color_bar,
         kind='bar',width=.9,
         label='Mean flow winter 2021',
         ax=ax)
-
 
 
 ### Message
@@ -143,8 +146,8 @@ if token_add_message:
 	ax.text(1.75, 2600, f'Gas consumption coverage: {winter_days_covered} winter days', 
 			fontsize=tamano_small, color=color_notes)
 
-	# Get mean imports last winter
-	EU_import_last_winter = df['Mean flow last winter (GWh/d)'].sum()
+	# Get mean imports winter 2021
+	EU_import_last_winter = df['Mean flow winter 2021 (GWh/d)'].sum()
 
 	# Winter days covered assuming winter 2021 imports
 	winter_days_covered_2021 = round(winter_days*(EU_import_last_winter*winter_days/(EU_winter_cons*1000)))
@@ -152,7 +155,6 @@ if token_add_message:
 	# Add message
 	ax.text(1.75, 2200, f'Gas consumption coverage: {winter_days_covered_2021} winter days',
 			fontsize=tamano_small, color=color_bar)
-
 
 
 ### Notes
@@ -185,6 +187,8 @@ ax.grid(which='major', color=color_grid,linestyle='--', linewidth=0.8)
 ax.set_axisbelow(True)
 
 ax.set_xticklabels(textwrap.fill(x.get_text(), max_width) for x in ax.get_xticklabels())
+
+
 
 
 

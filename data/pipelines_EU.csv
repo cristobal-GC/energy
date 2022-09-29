@@ -1,7 +1,7 @@
-# Data source: https://transparency.entsog.eu/#/map
-Name;Capacity (GWh/d);Mean flow last winter (GWh/d)
-MEDGAZ    (DZ-ES);337;300.91
-TRANSMED  (DZ-IT);1138;668.2
-GREEN     STREAM   (LY-IT);475;69.9
-TANAP     (TR-GR);375;322.5
-Several   from   Norway;3618.3;3618.3
+# Data source: https://transparency.entsog.eu/#/map,,
+Name,Capacity (GWh/d),Mean flow winter 2021 (GWh/d)
+MEDGAZ    (DZ-ES),337,300.91
+TRANSMED  (DZ-IT),1138,668.2
+GREEN     STREAM   (LY-IT),475,69.9
+TANAP     (TR-GR),375,322.5
+Several   from   Norway,3618.3,3618.3

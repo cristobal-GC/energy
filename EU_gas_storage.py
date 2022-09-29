@@ -2,12 +2,18 @@
 """
 This script generates a plot showing the current state of gas storage facilities in EU
 
+Data source: 
+[1] https://agsi.gie.eu/
+[2] https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gas/default/table?lang=en
+[3] https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table?lang=en
+
+A data file named 'AGSI_CountryAggregatedDataset_gasDayStart_{year}-{month}-{day}' needs to be downloaded from [1] and stored in folder 'data/'
+
+
 https://github.com/cristobal-GC/energy
 """
 
 # Comment: only Spain and Latvia can withdraw during winter days (1/Nov to 31/March) less than their total storage capacity due to limited withdrawal capacity. This fact is negligeable.
-
-# Comment: minimum EU storage level 18% in April 2018
 
 
 
@@ -16,33 +22,34 @@ import matplotlib.pyplot as plt
 
 
 
+
+
 #################### Analysis parameters
 
-### Date for file data/AGSI_CountryAggregatedDataset_gasDayStart_{year}-{month}-{day}
-# (download files from https://agsi.gie.eu/ and store in folder 'data/')
-day		= '26'
+### Date 
+day	= '27'
 month	= '09'
-year	= '2022'
+year	= '2021'
 
 
-
-### Winter consumption (from 1/Nov to 31/March) is assumed to be 55% of year consumption
-# Ref: EUROSTAT
-# https://ec.europa.eu/eurostat/databrowser/view/nrg_cb_gasm/default/table?lang=en
-winter_cons_factor = 0.55
+### Winter days from 1st/Nov to 31/Mar
 winter_days = 151
 
 
-
 ### Minimum storage level in EU wrt total capacity (April/2018): 18%
-# Ref: https://agsi.gie.eu/
+# Observed in April 2018
+# Ref: [1]
 min_storage_level = 0.18
 
 
+### EU gas annual consumption (EU27 average between 2017 and 2021)
+# Ref: EUROSTAT [2]
+EU_year_cons = 4287.4 # TWh
 
-### EU gas annual consumption 
-# Ref: https://agsi.gie.eu/
-EU_year_cons = 4151.8 # TWh
+
+### Winter consumption (from 1/Nov to 31/March) is assumed to be 55% of year consumption
+# Ref: EUROSTAT [3]
+winter_cons_factor = 0.55
 
 
 
@@ -54,9 +61,8 @@ EU_year_cons = 4151.8 # TWh
 token_add_message = True
 
 
-
 ### font sizes
-tamano 			= 18
+tamano 		= 18
 tamano_small 	= 16
 tamano_notes	= 13
 
@@ -68,13 +74,11 @@ params = {'axes.labelsize': tamano,
 plt.rcParams.update(params)
 
 
-
 ### Colours
 color_bar 		= (0.65,0.3,0.3) # dark red
-color_message 	= (0.0,0.3,0.6) # azure 40%
+color_message 		= (0.0,0.3,0.6) # azure 40%
 color_grid		= (0.8,0.8,0.8) # light gray
 color_notes		= (0.4,0.4,0.4) # gray
-
 
 
 ### Define figure and axes size
@@ -83,7 +87,7 @@ figure_height 	= 20 # cm
 
 left_margin 	= 3 # cm
 right_margin 	= .5 #cm
-top_margin 		= 1 # cm
+top_margin 	= 1 # cm
 bottom_margin 	= 7 # cm
 
 
@@ -158,20 +162,17 @@ fig = plt.figure(figsize=(figure_width*cm2inch,figure_height*cm2inch))
 ax = fig.add_axes((left, bottom, width, height))
 
 
-
 ### Add bars
 df.plot(x='Name', y='Working (gas) volume (TWh)',
         color=color_grid,
         kind='bar',width=.9,
         label='Capacity',
         ax=ax)
-            
-
+    
 df.plot(x='Name', y='Gas in storage (TWh)',
         color=color_bar,
         kind="bar",width=.9,
         ax=ax,label=f'{day}/{month}/{year}')
-
 
 
 ### Message 
@@ -200,7 +201,6 @@ if token_add_message:
 	plt.arrow(11.4, 160, .75, 0,head_width=5, head_length=0.1, fc=color_notes, ec=color_notes)
 
 
-
 ### Notes
 new_line = 15
 
@@ -214,7 +214,6 @@ ax.text(-2.,-110-2*new_line,'Data, details and code:',
 			fontsize=tamano_notes, color=color_notes)
 ax.text(1.7,-110-2*new_line,'https://github.com/cristobal-GC/energy/blob/main/EU_gas_storage.py',
 			fontsize=tamano_notes, color=color_message)
-
 
 
 ### Customise plot
