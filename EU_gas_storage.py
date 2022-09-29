@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 ### Date 
 day	= '27'
 month	= '09'
-year	= '2021'
+year	= '2022'
 
 
 ### Winter days from 1st/Nov to 31/Mar
@@ -207,7 +207,7 @@ new_line = 15
 ax.text(-2.,-110,f'Winter days: From 1/Nov to 31/March (151 days).',
 			fontsize=tamano_notes, color=color_notes)
 
-ax.text(-2.,-110-1*new_line,f'A minimum storage level of {round(100*min_storage_level)}% is assumed.',
+ax.text(-2.,-110-1*new_line,f'Covered winter days are computed assuming a minimum storage level of {round(100*min_storage_level)}%.',
 			fontsize=tamano_notes, color=color_notes)
 
 ax.text(-2.,-110-2*new_line,'Data, details and code:',
