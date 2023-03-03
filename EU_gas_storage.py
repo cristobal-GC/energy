@@ -27,9 +27,9 @@ import matplotlib.pyplot as plt
 #################### Analysis parameters
 
 ### Date 
-day	= '27'
-month	= '09'
-year	= '2022'
+day	= '14'
+month	= '02'
+year	= '2023'
 
 
 ### Winter days from 1st/Nov to 31/Mar
